@@ -211,7 +211,7 @@ module.exports = {
           url: client.config.links.support,
         })
         .setDescription(
-          `> **\`.01\` ${dot} Bot Dev.? | [${ozuma.displayName}](https://discord.com/users/${ozuma.id})\n> \`.02\` ${dot} Web Dev.? | [${kabbu.displayName}](https://discord.com/users/${kabbu.id})\n> \`.03\` ${dot} Own.? | [${ayush.displayName}](https://discord.com/users/${ayush.id})**`,
+          `> **\`.01\` ${dot} Bot Dev.? | [${t4n1shq.displayName}](https://discord.com/users/${t4n1shq.id})\n> \`.02\` ${dot} Web Dev.? | [${t4n1shq.displayName}](https://discord.com/users/${t4n1shq.id})\n> \`.03\` ${dot} Own.? | [${t4n1shq.displayName}](https://discord.com/users/${t4n1shq.id})**`,
         );
 
       const meko3 = new EmbedBuilder()
