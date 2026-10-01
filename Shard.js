@@ -5,8 +5,24 @@
  *
  */
 
+// Render Web Service health server
+const http = require("http");
+
+const PORT = process.env.PORT || 3000;
+
+http
+  .createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("DRACO MC Bot is online!");
+  })
+  .listen(PORT, "0.0.0.0", () => {
+    console.log(`[WEB] Health server running on port ${PORT}`);
+  });
+
+// Discord bot
 const config = require("./src/config");
 const { ClusterManager } = require("discord-hybrid-sharding");
+
 [
   {
     file: "./index.js",
