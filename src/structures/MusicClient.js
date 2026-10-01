@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const { Kazagumo, Plugins } = require("kazagumo");
 const mongoose = require("mongoose");
 const { readdirSync, existsSync } = require("fs");
-const { Shoukaku } = require("shoukaku"); // Connectors ki zaroorat nahi padegi ab
+const { Shoukaku, Connectors } = require("shoukaku");
 const Spotify = require("kazagumo-spotify");
 const { ClusterClient, getInfo } = require("discord-hybrid-sharding");
 const { AutoPoster } = require("topgg-autoposter");
@@ -53,8 +53,8 @@ class MusicBot extends Client {
     this.spamMap = new Map();
     this.cooldowns = new Collection();
 
-    // ⬇️ FIX: Shoukaku v4 initialization without broken connector function error ⬇️
-    this.shoukaku = new Shoukaku(this, this.config.nodes, ShoukakuOptions);
+    // Sahi Shoukaku v4 initialization Connectors.DiscordJS ke sath
+    this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), this.config.nodes, ShoukakuOptions);
 
     this.manager = new Kazagumo({
       defaultSearchEngine: this.config.node_source || "ytsearch",
