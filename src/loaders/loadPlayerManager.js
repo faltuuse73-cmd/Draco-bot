@@ -1,7 +1,14 @@
 /** @format */
 
-const { Kazagumo, Plugins, KazagumoTrack } = require("kazagumo");
-const { Connectors, LoadType } = require("shoukaku");
+const {
+  Kazagumo,
+  KazagumoTrack,
+} = require("kazagumo");
+
+const {
+  Connectors,
+  LoadType,
+} = require("shoukaku");
 
 const searchEngines = {
   DEEZER: "dzsearch",
@@ -9,66 +16,154 @@ const searchEngines = {
   YOUTUBE: "ytsearch",
   JIO_SAAVAN: "jssearch",
   SOUNDCLOUD: "scsearch",
-  YOUTUBE_MUSIC: "ytmsearch"
+  YOUTUBE_MUSIC: "ytmsearch",
+};
+
+const ShoukakuOptions = {
+  moveOnDisconnect: false,
+  resume: false,
+  resumeTimeout: 30,
+  reconnectTries: 5,
+  restTimeout: 10000,
+  userAgent: "DracoMC",
 };
 
 module.exports = function loadPlayerManager(client) {
+  // ==========================================
+  // SINGLE KAZAGUMO / SHOUKAKU INSTANCE
+  // ==========================================
+
   const manager = new Kazagumo(
     {
-      defaultSearchEngine: client.config.node_source,
+      defaultSearchEngine:
+        client.config.node_source || "ytsearch",
+
       send: (guildId, payload) => {
         const guild = client.guilds.cache.get(guildId);
-        if (guild) guild.shard.send(payload);
-      }
+
+        if (guild) {
+          guild.shard.send(payload);
+        }
+      },
     },
+
     new Connectors.DiscordJS(client),
+
     client.config.nodes,
-    client.config.node_options
+
+    ShoukakuOptions
   );
 
-  // Attach the searchEngines enum to manager
+  // ==========================================
+  // SEARCH ENGINE DATA
+  // ==========================================
+
   manager.searchEngines = searchEngines;
 
-  // Also manually store the default search engine
-  manager.defaultSearchEngine = client.config.node_source;
+  manager.defaultSearchEngine =
+    client.config.node_source || "ytsearch";
 
-  // Override the search method
+  // ==========================================
+  // CUSTOM SEARCH
+  // ==========================================
+
   manager.search = async function (query, options = {}) {
-    const prefix = options.engine || this.defaultSearchEngine;
+    const prefix =
+      options.engine || this.defaultSearchEngine;
 
-    const node = [...this.shoukaku.nodes.values()][0];
-    if (!node) return { type: "SEARCH", tracks: [] };
+    // Prefer a connected Lavalink node.
+    const node = [...this.shoukaku.nodes.values()].find(
+      (node) => node.state === 2
+    );
 
-    const isUrl = /^https?:\/\//.test(query);
+    // Fallback in case state representation differs.
+    const selectedNode =
+      node || [...this.shoukaku.nodes.values()][0];
 
-    const searchQuery = isUrl ? query : `${prefix}:${query}`;
+    if (!selectedNode) {
+      return {
+        type: "SEARCH",
+        tracks: [],
+      };
+    }
 
-    const res = await node.rest.resolve(searchQuery).catch(() => null);
+    const isUrl = /^https?:\/\//i.test(query);
 
-    if (!res) return { type: "SEARCH", tracks: [] };
+    const searchQuery = isUrl
+      ? query
+      : `${prefix}:${query}`;
+
+    const res = await selectedNode.rest
+      .resolve(searchQuery)
+      .catch((error) => {
+        if (client.logger) {
+          client.logger.log(
+            `[Lavalink Search] ${error.message || error}`,
+            "error"
+          );
+        }
+
+        return null;
+      });
+
+    if (!res) {
+      return {
+        type: "SEARCH",
+        tracks: [],
+      };
+    }
 
     switch (res.loadType) {
       case LoadType.TRACK:
         return {
           type: "TRACK",
-          tracks: [new KazagumoTrack(res.data, options.requester)]
+          tracks: [
+            new KazagumoTrack(
+              res.data,
+              options.requester
+            ),
+          ],
         };
+
       case LoadType.PLAYLIST:
         return {
           type: "PLAYLIST",
-          playlistName: res.data.info.name,
-          tracks: res.data.tracks.map((track) => new KazagumoTrack(track, options.requester))
+
+          playlistName:
+            res.data?.info?.name || "Unknown Playlist",
+
+          tracks: (res.data?.tracks || []).map(
+            (track) =>
+              new KazagumoTrack(
+                track,
+                options.requester
+              )
+          ),
         };
+
       case LoadType.SEARCH:
         return {
           type: "SEARCH",
-          tracks: res.data.map((track) => new KazagumoTrack(track, options.requester))
+
+          tracks: (res.data || []).map(
+            (track) =>
+              new KazagumoTrack(
+                track,
+                options.requester
+              )
+          ),
         };
+
       default:
-        return { type: "SEARCH", tracks: [] };
+        return {
+          type: "SEARCH",
+          tracks: [],
+        };
     }
   };
 
+  // Only assignment of client.manager in the project.
   client.manager = manager;
+
   return manager;
 };
