@@ -82,7 +82,7 @@ client.on('messageCreate', msg => {
 # Installation
 
 ## 1. Clone the repo
-git clone https://github.com/ozumaly/DRACO MC.git
+git clone https://github.com/faltuuse73-cmd/Draco-bot
 
 ## 2. Install dependencies
 npm install
