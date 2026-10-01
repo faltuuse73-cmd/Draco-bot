@@ -219,7 +219,7 @@ module.exports = {
         .setTitle(`**__Links__**`)
         .setImage(client.config.links.arrkiii)
         .setDescription(
-          `>>> ***<:inv:1220409952921981021> Invite Links: [Click Me](${client.config.links.invite})\n<:support:1220409940943048784> Support Server Link [Click Me](${client.config.links.support})\n<:privacy:1220409917278523473> Privacy Policy Link: ***Coming soon!***\n<:topgg:1220409964116316170> Vote Link: ***Coming soon!***`,
+          `>>> ***<:inv:1220409952921981021> Invite Links: [Click Me](${client.config.links.invite})\n<:support:1220409940943048784> Support Server Link [Click Me](${client.config.links.support})\n<:privacy:1220409917278523473> Privacy Policy Link: Coming soon!\n<:topgg:1220409964116316170> Vote Link: Coming soon!`,
         );
 
       collector.on("collect", async (i) => {
