@@ -97,10 +97,8 @@ SPOTIFY_SECRET=your_spotify_secret
 node Shard.js
 
 # Credits
-- Developed by: 9vxk
-- Contributor: ofcyourmanas
-- Support: https://discord.gg/urV9mkfW9t
-- Partners & Hoster: https://vps.ofcyourmanas.xyz
+- Developed by: T4N1SHQ
+- Support: https://discord.gg/qcNj6VBm6s
 
 # Requirements
 - Node.js v20+
