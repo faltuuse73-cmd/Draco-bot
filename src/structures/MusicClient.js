@@ -1,8 +1,6 @@
 /** @format */
 
 const { Client, Collection } = require("discord.js");
-const { Kazagumo } = require("kazagumo");
-const { Connectors } = require("shoukaku");
 const mongoose = require("mongoose");
 const { ClusterClient, getInfo } = require("discord-hybrid-sharding");
 const { AutoPoster } = require("topgg-autoposter");
@@ -10,36 +8,23 @@ const { AutoPoster } = require("topgg-autoposter");
 const loadPlayerManager = require("../loaders/loadPlayerManager");
 const permissionHandler = require("../events/Client/PremiumChecks");
 
-// Shoukaku v4 options
-const ShoukakuOptions = {
-  moveOnDisconnect: false,
-  resume: false,
-  resumeTimeout: 30,
-  reconnectTries: 2,
-  restTimeout: 10000,
-  userAgent: "DracoMC",
-};
-
 class MusicBot extends Client {
   constructor() {
     super({
       intents: 33779,
-
       properties: {
         browser: "Discord Android",
       },
-
       allowedMentions: {
         parse: ["roles", "users", "everyone"],
         repliedUser: false,
       },
-
       shards: getInfo().SHARD_LIST,
       shardCount: getInfo().TOTAL_SHARDS,
     });
 
     // =========================
-    // BASIC CLIENT PROPERTIES
+    // BASIC CLIENT SETUP
     // =========================
 
     this.commands = new Collection();
@@ -71,49 +56,25 @@ class MusicBot extends Client {
     this.cooldowns = new Collection();
 
     // =========================
-    // KAZAGUMO + SHOUKAKU
+    // MUSIC MANAGER
     // =========================
-    //
     // IMPORTANT:
-    // Kazagumo creates/manages the Shoukaku instance itself.
-    // Do NOT create a separate `new Shoukaku(...)` here.
-    //
+    // Kazagumo is created ONLY inside loadPlayerManager.
+    // Do not create another Kazagumo/Shoukaku instance here.
 
-    const connector = new Connectors.DiscordJS(this);
+    loadPlayerManager(this);
 
-    this.manager = new Kazagumo(
-      {
-        defaultSearchEngine: this.config.node_source || "ytsearch",
-
-        send: (guildId, payload) => {
-          const guild = this.guilds.cache.get(guildId);
-
-          if (guild) {
-            guild.shard.send(payload);
-          }
-        },
-      },
-
-      connector,
-      this.config.nodes,
-      ShoukakuOptions
-    );
-
-    // Keep this alias because existing loaders/events may use
-    // client.shoukaku directly.
+    // Existing code/events may access client.shoukaku directly.
     this.shoukaku = this.manager.shoukaku;
 
     // =========================
-    // DATABASE / OTHER SYSTEMS
+    // DATABASE / SERVICES
     // =========================
 
     this._connectMongodb();
     this._initAutoPoster();
 
     permissionHandler(this);
-
-    // Existing music manager loader
-    loadPlayerManager(this);
 
     // =========================
     // LOAD HANDLERS
