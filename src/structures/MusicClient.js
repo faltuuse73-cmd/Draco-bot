@@ -17,7 +17,7 @@ const ShoukakuOptions = {
   resumeTimeout: 30,
   reconnectTries: 2,
   restTimeout: 10000,
-  userAgent: "Arrkiii",
+  userAgent: "DracoMC",
 };
 
 class MusicBot extends Client {
