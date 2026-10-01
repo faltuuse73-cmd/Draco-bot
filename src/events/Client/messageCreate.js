@@ -219,7 +219,7 @@ module.exports = {
         .setTitle(`**__Links__**`)
         .setImage(client.config.links.arrkiii)
         .setDescription(
-          `>>> ***<:inv:1220409952921981021> Invite Links: [Click Me](${client.config.links.invite})\n<:support:1220409940943048784> Support Server Link [Click Me](${client.config.links.support})\n<:privacy:1220409917278523473> Privacy Policy Link: [Comming soon!]\n<:topgg:1220409964116316170> Vote Link: [Comming soon!]***`,
+          `>>> ***<:inv:1220409952921981021> Invite Links: [Click Me](${client.config.links.invite})\n<:support:1220409940943048784> Support Server Link [Click Me](${client.config.links.support})\n<:privacy:1220409917278523473> Privacy Policy Link: ***Coming soon!***\n<:topgg:1220409964116316170> Vote Link: ***Coming soon!***`,
         );
 
       collector.on("collect", async (i) => {
@@ -411,7 +411,6 @@ module.exports = {
 
     if (command.owner && message.author.id !== `${client.owner}`) {
       const t4n1shq = await client.users.fetch(`1416420999519408250`);
-      const t4n1shq = await client.channels.cache.get(`1416420999519408250`);
       const embed = new EmbedBuilder().setColor(client.color).setAuthor({
         name: `| Only T4N1SHQ can use these commands!`,
         iconURL: message.author.displayAvatarURL(),
