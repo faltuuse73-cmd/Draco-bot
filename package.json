@@ -18,7 +18,7 @@
     "discord-hybrid-sharding": "^2.2.5",
     "discord.js": "^14.19.3",
     "dokdo": "^1.0.1",
-    "kazagumo": "^3.3.0",
+    "kazagumo": "^3.4.3",
     "kazagumo-spotify": "^2.1.1",
     "moment": "^2.30.1",
     "moment-duration-format": "^2.3.2",
@@ -27,7 +27,7 @@
     "musicard": "^2.0.5",
     "musicard-quartz": "^1.0.0",
     "quickchart-js": "^3.1.3",
-    "shoukaku": "^4.1.1",
+    "shoukaku": "^4.3.0",
     "songcard": "^1.4.1",
     "topgg-autoposter": "^2.0.2",
     "undici": "^7.4.0"
