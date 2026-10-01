@@ -17,7 +17,7 @@ module.exports = {
     const button = new ButtonBuilder()
       .setLabel("Vote")
       .setStyle("Link")
-      .setURL("https://top.gg/bot/1033496708992204840/vote");
+      .setURL("https://discord.gg/qcNj6VBm6s");
     const row = new ActionRowBuilder().addComponents(button);
     message.reply({components: [row] });
   },
