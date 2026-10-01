@@ -71,7 +71,7 @@ module.exports = {
         )
         .setThumbnail(message.author.displayAvatarURL())
         .setImage(
-          "https://media.discordapp.net/attachments/1187323477032697867/1243073916076036096/20230828_005551.png?ex=6700cf4c&is=66ff7dcc&hm=7ce14e2115c048d77b4a4cb4ec968c620d09622ce314fdef59dd959a27c25a29&",
+          "https://cdn.discordapp.com/attachments/1519995340361568386/1555057312316526712/IMG_20261001_085221.jpg?backend=b2&ex=6abf237a&is=6abdd1fa&hm=92c172e8cf93bc168a2a09d3c446f57f493df782b6fedfa0ec615ecc483696b9&",
         )
         .setFooter({
           text: `Love From DRACO MC <3`,
@@ -199,9 +199,7 @@ module.exports = {
         .setDescription(
           `<:arroww:1215695191793471559> **System Information\n> . Bot Name : ${client.user.username}\n> . Servers : ${client.numb(guildsCounts.size)}\n> . Channels : ${client.numb(channelsCounts.size)}\n> . Users : ${client.numb(usercount)}\n> . Discord.js : ${version}\n> . Total Commands : ${client.numb(client.commands.size)}\n> . Uptime :<t:${lund}:R>\n> . Ping : ${client.ws.ping}ms**`,
         );
-      const ozuma = await client.users.fetch(`1029065620878282792`);
-      const kabbu = await client.users.fetch(`883997337863749652`);
-      const ayush = await client.users.fetch(`852561898774724648`);
+      const t4n1shq = await client.users.fetch(`1416420999519408250`);
       const dot = client.emoji.dot;
       const meko2 = new EmbedBuilder()
         .setColor(client.color)
