@@ -29,7 +29,7 @@ module.exports = {
       // Embeds
       const homeEmbed = new EmbedBuilder()
         .setColor(client.color)
-        .setTitle("<:there:1125101077486915715> Welcome to **About**")
+        .setTitle("<:partners:1199282537357381762> Welcome to **About**")
         .setDescription(
           `_<:stolen_emoji:1201841280577970176> <a:Playing:1188088755819663400> **Check** [Website!](https://dracomc.fun)\n` +
             `<:stolen_emoji:1201841280577970176> **Join** [Support](${client.config.links.support}) & Get **Nop**!_\n\n` +
