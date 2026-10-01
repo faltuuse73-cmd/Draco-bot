@@ -219,7 +219,7 @@ module.exports = {
         .setTitle(`**__Links__**`)
         .setImage(client.config.links.arrkiii)
         .setDescription(
-          `>>> ***<:inv:1220409952921981021> Invite Links: [Click Me](${client.config.links.invite})\n<:support:1220409940943048784> Support Server Link [Click Me](${client.config.links.support})\n<:privacy:1220409917278523473> Privacy Policy Link: [Click Me](https://github.com/edctrmiktg/aarii-privacy-policy)\n<:topgg:1220409964116316170> Vote Link: [Click Me](https://top.gg/bot/1033496708992204840/vote)***`,
+          `>>> ***<:inv:1220409952921981021> Invite Links: [Click Me](${client.config.links.invite})\n<:support:1220409940943048784> Support Server Link [Click Me](${client.config.links.support})\n<:privacy:1220409917278523473> Privacy Policy Link: [Comming soon!]\n<:topgg:1220409964116316170> Vote Link: [Comming soon!]***`,
         );
 
       collector.on("collect", async (i) => {
@@ -410,8 +410,8 @@ module.exports = {
     }
 
     if (command.owner && message.author.id !== `${client.owner}`) {
-      const ozuma = await client.users.fetch(`1029065620878282792`);
-      const Ozuma_xd = await client.channels.cache.get(`1241614535568134236`);
+      const t4n1shq = await client.users.fetch(`1416420999519408250`);
+      const t4n1shq = await client.channels.cache.get(`1416420999519408250`);
       const embed = new EmbedBuilder().setColor(client.color).setAuthor({
         name: `| Only T4N1SHQ can use these commands!`,
         iconURL: message.author.displayAvatarURL(),
