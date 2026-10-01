@@ -50,13 +50,24 @@ class MusicBot extends Client {
     this.emoji = require("../utils/emoji.json");
     this.cluster = new ClusterClient(this);
     if (!this.token) this.token = this.config.token;
-    this.manager = null;
     this.spamMap = new Map();
     this.cooldowns = new Collection();
 
+    // Shoukaku aur Kazagumo Initialize kar diya hai yahan taaki nodes load ho sakein
+    this.shoukaku = new Connectors.DiscordJS ? new (require("shoukaku").Shoukaku)(new Connectors.DiscordJS(this), this.config.nodes, ShoukakuOptions) : null;
+    // Agar upar wali line me syntax issue aaye toh standard Shoukaku import use kar rahe hain:
+    this.shoukaku = new (require("shoukaku").Shoukaku)(new Connectors.DiscordJS(this), this.config.nodes, ShoukakuOptions);
+
+    this.manager = new Kazagumo({
+      defaultSearchEngine: this.config.node_source || "ytsearch",
+      send: (guildId, payload) => {
+        const guild = this.guilds.cache.get(guildId);
+        if (guild) guild.shard.send(payload);
+      },
+    }, this.shoukaku);
+
     this._connectMongodb();
     this._initAutoPoster();
-    //this._loadPlayer();
     permissionHandler(this);
     loadPlayerManager(this);
     [
@@ -71,6 +82,7 @@ class MusicBot extends Client {
       require(`../loaders/${handler}`)(this);
     });
   }
+
   async _connectMongodb() {
     const dbOptions = {
       autoIndex: false,
@@ -110,6 +122,7 @@ class MusicBot extends Client {
         this.logger.log(`Error posting stats to top.gg: ${err}`, "error");
       });
   }
+
   connect() {
     return super.login(this.token);
   }
