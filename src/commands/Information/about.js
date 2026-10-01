@@ -37,7 +37,7 @@ module.exports = {
         )
         .setImage(client.config.links.arrkiii)
         .setFooter({
-          text: `Hosted On - panel.moonhost.xyz | Page: [1/3]`,
+          text: `DRACO MC | Page: [1/3]`,
           iconURL: client.user.displayAvatarURL(),
         });
 
@@ -58,13 +58,13 @@ module.exports = {
             `**. Ping:** ${client.ws.ping}ms`,
         )
         .setFooter({
-          text: `Hosted On - panel.moonhost.xyz | Page: [2/3]`,
+          text: `DRACO MC | Page: [2/3]`,
           iconURL: client.user.displayAvatarURL(),
         });
 
       const teamEmbed = new EmbedBuilder()
         .setAuthor({
-          name: "✨ Team <33 ✨",
+          name: "✨ Team DRACO MC ✨",
           iconURL: message.author.displayAvatarURL(),
           url: client.config.links.support,
         })
@@ -76,7 +76,7 @@ module.exports = {
         .setImage(client.config.links.arrkiii)
         .setThumbnail(client.user.displayAvatarURL())
         .setFooter({
-          text: "🌙 Hosted On - panel.moonhost.xyz | Page: [3/3]",
+          text: "🌙 DRACO MC | Page: [3/3]",
           iconURL: client.user.displayAvatarURL(),
         })
         .setTimestamp();
