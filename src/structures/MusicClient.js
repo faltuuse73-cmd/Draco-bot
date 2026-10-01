@@ -1,14 +1,16 @@
 /** @format */
 
-const { Client, GatewayIntentBits, Collection } = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const { Kazagumo } = require("kazagumo");
+const { Connectors } = require("shoukaku");
 const mongoose = require("mongoose");
-const { Shoukaku, Connectors } = require("shoukaku");
 const { ClusterClient, getInfo } = require("discord-hybrid-sharding");
 const { AutoPoster } = require("topgg-autoposter");
+
 const loadPlayerManager = require("../loaders/loadPlayerManager");
 const permissionHandler = require("../events/Client/PremiumChecks");
 
+// Shoukaku v4 options
 const ShoukakuOptions = {
   moveOnDisconnect: false,
   resume: false,
@@ -22,55 +24,101 @@ class MusicBot extends Client {
   constructor() {
     super({
       intents: 33779,
+
       properties: {
         browser: "Discord Android",
       },
+
       allowedMentions: {
         parse: ["roles", "users", "everyone"],
         repliedUser: false,
       },
+
       shards: getInfo().SHARD_LIST,
       shardCount: getInfo().TOTAL_SHARDS,
     });
 
+    // =========================
+    // BASIC CLIENT PROPERTIES
+    // =========================
+
     this.commands = new Collection();
     this.slashCommands = new Collection();
+
     this.config = require("../config.js");
+
     this.owner = this.config.ownerID;
     this.prefix = this.config.prefix;
     this.topgg = this.config.topgg;
     this.embedColor = this.config.embedColor;
+
     this.button = require("../custom/button.js");
     this.embed = require("../custom/embed.js")(this.embedColor);
+
     require("../custom/numformat")(this);
+
     this.aliases = new Collection();
     this.logger = require("../utils/logger.js");
     this.emoji = require("../utils/emoji.json");
+
     this.cluster = new ClusterClient(this);
-    if (!this.token) this.token = this.config.token;
+
+    if (!this.token) {
+      this.token = this.config.token;
+    }
+
     this.spamMap = new Map();
     this.cooldowns = new Collection();
 
-    // Safe Initialization for Shoukaku v4 + Connectors
-    try {
-      const connector = new Connectors.DiscordJS(this);
-      this.shoukaku = new Shoukaku(connector, this.config.nodes, ShoukakuOptions);
-    } catch (e) {
-      this.shoukaku = new Shoukaku(this, this.config.nodes, ShoukakuOptions);
-    }
+    // =========================
+    // KAZAGUMO + SHOUKAKU
+    // =========================
+    //
+    // IMPORTANT:
+    // Kazagumo creates/manages the Shoukaku instance itself.
+    // Do NOT create a separate `new Shoukaku(...)` here.
+    //
 
-    this.manager = new Kazagumo({
-      defaultSearchEngine: this.config.node_source || "ytsearch",
-      send: (guildId, payload) => {
-        const guild = this.guilds.cache.get(guildId);
-        if (guild) guild.shard.send(payload);
+    const connector = new Connectors.DiscordJS(this);
+
+    this.manager = new Kazagumo(
+      {
+        defaultSearchEngine: this.config.node_source || "ytsearch",
+
+        send: (guildId, payload) => {
+          const guild = this.guilds.cache.get(guildId);
+
+          if (guild) {
+            guild.shard.send(payload);
+          }
+        },
       },
-    }, this.shoukaku);
+
+      connector,
+      this.config.nodes,
+      ShoukakuOptions
+    );
+
+    // Keep this alias because existing loaders/events may use
+    // client.shoukaku directly.
+    this.shoukaku = this.manager.shoukaku;
+
+    // =========================
+    // DATABASE / OTHER SYSTEMS
+    // =========================
 
     this._connectMongodb();
     this._initAutoPoster();
+
     permissionHandler(this);
+
+    // Existing music manager loader
     loadPlayerManager(this);
+
+    // =========================
+    // LOAD HANDLERS
+    // =========================
+
     [
       "loadAntinukes",
       "loadAutoMods",
@@ -92,7 +140,9 @@ class MusicBot extends Client {
     };
 
     mongoose.set("strictQuery", false);
+
     mongoose.connect(this.config.mongourl, dbOptions);
+
     mongoose.Promise = global.Promise;
 
     mongoose.connection.on("connected", () => {
@@ -100,7 +150,10 @@ class MusicBot extends Client {
     });
 
     mongoose.connection.on("err", (err) => {
-      this.logger.log(`[DB] Mongoose connection error: ${err.stack}`, "error");
+      this.logger.log(
+        `[DB] Mongoose connection error: ${err.stack}`,
+        "error"
+      );
     });
 
     mongoose.connection.on("disconnected", () => {
@@ -110,6 +163,7 @@ class MusicBot extends Client {
 
   _initAutoPoster() {
     const topggToken = this.config.topgg;
+
     if (!topggToken) {
       this.logger.log("Top.gg API token is not set.", "error");
       return;
