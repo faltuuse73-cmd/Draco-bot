@@ -36,10 +36,10 @@ module.exports = {
   nodes: [
     {
        url: process.env.NODE_URL || "lavalinkv4.serenetia.com",
-      port: 443,
+      port: 80,
       name: process.env.NODE_NAME || "Lavalink",
       auth: process.env.NODE_AUTH || "https://dsc.gg/ajidevserver",
-      secure: parseBoolean(process.env.NODE_SECURE || "true"),
+      secure: parseBoolean(process.env.NODE_SECURE || "false"),
     },
   ],
 };
