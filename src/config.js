@@ -4,7 +4,7 @@ module.exports = {
   token: process.env.DISCORD_TOKEN || "",
   clientId: "1399186967966519326",
   prefix: ">",
-  ownerID: "870179991462236170",
+  ownerID: "1416420999519408250",
   SpotifyID: process.env.SPOTIFY_CLIENT_ID || "",
   SpotifySecret: process.env.SPOTIFY_CLIENT_SECRET || "",
   mongourl: process.env.MONGO_URI || "",
@@ -21,7 +21,7 @@ module.exports = {
       "https://cdn.discordapp.com/attachments/1519995340361568386/1555056524374835261/standard_3.gif?backend=b2&ex=6abf22be&is=6abdd13e&hm=60e0af3652488c739ebae7640392e5153781df9bc3404428936fa69d4793cd1e&",
     power: "Powered By DRACO MC • T4N1SHQ",
     vanity: "discord.gg/dracomc",
-    guild: "1325384856477368420",
+    guild: "1534085749010595840",
     topgg: "https://top.gg/bot/1033496708992204840/vote",
   },
   Webhooks: {
