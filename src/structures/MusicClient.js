@@ -1,11 +1,9 @@
 /** @format */
 
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
-const { Kazagumo, Plugins } = require("kazagumo");
+const { Kazagumo } = require("kazagumo");
 const mongoose = require("mongoose");
-const { readdirSync, existsSync } = require("fs");
 const { Shoukaku, Connectors } = require("shoukaku");
-const Spotify = require("kazagumo-spotify");
 const { ClusterClient, getInfo } = require("discord-hybrid-sharding");
 const { AutoPoster } = require("topgg-autoposter");
 const loadPlayerManager = require("../loaders/loadPlayerManager");
@@ -53,8 +51,13 @@ class MusicBot extends Client {
     this.spamMap = new Map();
     this.cooldowns = new Collection();
 
-    // Sahi Shoukaku v4 initialization Connectors.DiscordJS ke sath
-    this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), this.config.nodes, ShoukakuOptions);
+    // Safe Initialization for Shoukaku v4 + Connectors
+    try {
+      const connector = new Connectors.DiscordJS(this);
+      this.shoukaku = new Shoukaku(connector, this.config.nodes, ShoukakuOptions);
+    } catch (e) {
+      this.shoukaku = new Shoukaku(this, this.config.nodes, ShoukakuOptions);
+    }
 
     this.manager = new Kazagumo({
       defaultSearchEngine: this.config.node_source || "ytsearch",
