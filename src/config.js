@@ -25,21 +25,32 @@ module.exports = {
     topgg: "https://top.gg/bot/1033496708992204840/vote",
   },
   Webhooks: {
-      black: process.env.WEBHOOK_BLACK || "",
+    black: process.env.WEBHOOK_BLACK || "",
     player_create: process.env.WEBHOOK_PLAYER_CREATE || "",
     player_delete: process.env.WEBHOOK_PLAYER_DELETE || "",
     guild_join: process.env.WEBHOOK_GUILD_JOIN || "",
-      guild_leave: process.env.WEBHOOK_GUILD_LEAVE || "",
+    guild_leave: process.env.WEBHOOK_GUILD_LEAVE || "",
     cmdrun: process.env.WEBHOOK_CMDRUN || "",
   },
 
   nodes: [
     {
-       url: process.env.NODE_URL || "lavalink.nazha.online",
-      port: 443,
-      name: process.env.NODE_NAME || "TripleN",
-      auth: process.env.NODE_AUTH || "nazhafreelava",
-      secure: parseBoolean(process.env.NODE_SECURE || "true"),
+      name: "AjieDev-V4",
+      url: "lava-v4.ajieblogs.eu.org:80",
+      auth: "https://dsc.gg/ajidevserver",
+      secure: false,
+    },
+    {
+      name: "Horizxon-India",
+      url: "lava4.horizxon.studio:80",
+      auth: "horizxon.studio",
+      secure: false,
+    },
+    {
+      name: "Horizxon-Germany",
+      url: "lava3.horizxon.studio:80",
+      auth: "horizxon.studio",
+      secure: false,
     },
   ],
 };
