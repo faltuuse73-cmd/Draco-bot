@@ -29,56 +29,38 @@ const ShoukakuOptions = {
 };
 
 module.exports = function loadPlayerManager(client) {
-  // ==========================================
-  // SINGLE KAZAGUMO / SHOUKAKU INSTANCE
-  // ==========================================
+  if (!client.config.nodes || !client.config.nodes.length) {
+    client.logger.log("[Lavalink] WARNING: No nodes found in config.js!", "error");
+  } else {
+    client.logger.log(`[Lavalink] Initializing with ${client.config.nodes.length} node(s)...`, "ready");
+  }
 
   const manager = new Kazagumo(
     {
-      defaultSearchEngine:
-        client.config.node_source || "ytsearch",
-
+      defaultSearchEngine: client.config.node_source || "ytsearch",
       send: (guildId, payload) => {
         const guild = client.guilds.cache.get(guildId);
-
         if (guild) {
           guild.shard.send(payload);
         }
       },
     },
-
     new Connectors.DiscordJS(client),
-
     client.config.nodes,
-
     ShoukakuOptions
   );
 
-  // ==========================================
-  // SEARCH ENGINE DATA
-  // ==========================================
-
   manager.searchEngines = searchEngines;
-
-  manager.defaultSearchEngine =
-    client.config.node_source || "ytsearch";
-
-  // ==========================================
-  // CUSTOM SEARCH
-  // ==========================================
+  manager.defaultSearchEngine = client.config.node_source || "ytsearch";
 
   manager.search = async function (query, options = {}) {
-    const prefix =
-      options.engine || this.defaultSearchEngine;
+    const prefix = options.engine || this.defaultSearchEngine;
 
-    // Prefer a connected Lavalink node.
     const node = [...this.shoukaku.nodes.values()].find(
       (node) => node.state === 2
     );
 
-    // Fallback in case state representation differs.
-    const selectedNode =
-      node || [...this.shoukaku.nodes.values()][0];
+    const selectedNode = node || [...this.shoukaku.nodes.values()][0];
 
     if (!selectedNode) {
       return {
@@ -88,10 +70,7 @@ module.exports = function loadPlayerManager(client) {
     }
 
     const isUrl = /^https?:\/\//i.test(query);
-
-    const searchQuery = isUrl
-      ? query
-      : `${prefix}:${query}`;
+    const searchQuery = isUrl ? query : `${prefix}:${query}`;
 
     const res = await selectedNode.rest
       .resolve(searchQuery)
@@ -102,7 +81,6 @@ module.exports = function loadPlayerManager(client) {
             "error"
           );
         }
-
         return null;
       });
 
@@ -128,10 +106,7 @@ module.exports = function loadPlayerManager(client) {
       case LoadType.PLAYLIST:
         return {
           type: "PLAYLIST",
-
-          playlistName:
-            res.data?.info?.name || "Unknown Playlist",
-
+          playlistName: res.data?.info?.name || "Unknown Playlist",
           tracks: (res.data?.tracks || []).map(
             (track) =>
               new KazagumoTrack(
@@ -144,7 +119,6 @@ module.exports = function loadPlayerManager(client) {
       case LoadType.SEARCH:
         return {
           type: "SEARCH",
-
           tracks: (res.data || []).map(
             (track) =>
               new KazagumoTrack(
@@ -162,8 +136,6 @@ module.exports = function loadPlayerManager(client) {
     }
   };
 
-  // Only assignment of client.manager in the project.
   client.manager = manager;
-
   return manager;
 };
