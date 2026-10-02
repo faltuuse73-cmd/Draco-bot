@@ -35,11 +35,11 @@ module.exports = {
 
   nodes: [
     {
-       url: process.env.NODE_URL || "lavalinkv4.serenetia.com",
-      port: 80,
-      name: process.env.NODE_NAME || "Lavalink",
-      auth: process.env.NODE_AUTH || "https://dsc.gg/ajidevserver",
-      secure: parseBoolean(process.env.NODE_SECURE || "false"),
+       url: process.env.NODE_URL || "lavalink.nazha.online",
+      port: 443,
+      name: process.env.NODE_NAME || "TripleN",
+      auth: process.env.NODE_AUTH || "nazhafreelava",
+      secure: parseBoolean(process.env.NODE_SECURE || "true"),
     },
   ],
 };
