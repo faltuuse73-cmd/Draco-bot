@@ -15,6 +15,35 @@ module.exports = {
       "ready",
     );
 
+    // ==========================================
+    // FORCE CONNECT LAVALINK NODES ON READY
+    // ==========================================
+    if (client.manager && client.manager.shoukaku) {
+      if (client.manager.shoukaku.connector) {
+        client.manager.shoukaku.connector.id = client.user.id;
+      }
+      client.manager.shoukaku.id = client.user.id;
+
+      if (client.config.nodes && client.config.nodes.length) {
+        client.logger.log(
+          `[Lavalink] Connecting ${client.config.nodes.length} node(s)...`,
+          "ready",
+        );
+        for (const node of client.config.nodes) {
+          try {
+            if (!client.manager.shoukaku.nodes.has(node.name)) {
+              client.manager.shoukaku.addNode(node);
+            }
+          } catch (err) {
+            client.logger.log(
+              `[Lavalink] Failed to add node ${node.name}: ${err.message}`,
+              "error",
+            );
+          }
+        }
+      }
+    }
+
     // Load slash commands
     console.log("Loading slash commands...");
     const slashCommandsPath = require("path").join(__dirname, "../../slashCommands");
