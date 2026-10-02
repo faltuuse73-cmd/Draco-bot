@@ -50,6 +50,27 @@ module.exports = function loadPlayerManager(client) {
     ShoukakuOptions
   );
 
+  // Bot ready hone ke baad pending nodes ko reconnect trigger karna
+  const initNodesOnReady = () => {
+    if (manager.shoukaku && client.config.nodes && client.config.nodes.length) {
+      for (const node of client.config.nodes) {
+        if (!manager.shoukaku.nodes.has(node.name)) {
+          try {
+            manager.shoukaku.addNode(node);
+          } catch (e) {
+            // Already initialized or connecting
+          }
+        }
+      }
+    }
+  };
+
+  if (client.isReady()) {
+    initNodesOnReady();
+  } else {
+    client.once("ready", initNodesOnReady);
+  }
+
   manager.searchEngines = searchEngines;
   manager.defaultSearchEngine = client.config.node_source || "ytsearch";
 
