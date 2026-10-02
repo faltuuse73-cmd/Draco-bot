@@ -33,25 +33,25 @@ module.exports = {
     cmdrun: process.env.WEBHOOK_CMDRUN || "",
   },
 
-  nodes: [
+nodes: [
     {
-      name: "AjieDev-V4",
-      url: "lava-v4.ajieblogs.eu.org:80",
+      name: "AjieBlogs-SSL",
+      url: "lava-v4.ajieblogs.eu.org:443",
       auth: "https://dsc.gg/ajidevserver",
-      secure: false,
+      secure: true,
     },
     {
-      name: "Horizxon-India",
-      url: "lava4.horizxon.studio:80",
-      auth: "horizxon.studio",
-      secure: false,
+      name: "Serenetia-SSL",
+      url: "lavalinkv4.serenetia.com:443",
+      auth: "https://dsc.gg/ajidevserver",
+      secure: true,
     },
     {
-      name: "Horizxon-Germany",
-      url: "lava3.horizxon.studio:80",
-      auth: "horizxon.studio",
-      secure: false,
-    },
+      name: "Inari-V4",
+      url: "lavalink.inari.site:443",
+      auth: "youshallnotpass",
+      secure: true,
+    }
   ],
 };
 
