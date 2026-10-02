@@ -2,7 +2,7 @@
 
 module.exports = {
   token: process.env.DISCORD_TOKEN || "",
-  clientId: "1399186967966519326",
+  clientId: "1529134542185828502",
   prefix: ">",
   ownerID: "1416420999519408250",
   SpotifyID: process.env.SPOTIFY_CLIENT_ID || "",
