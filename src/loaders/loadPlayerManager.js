@@ -29,11 +29,18 @@ const ShoukakuOptions = {
 };
 
 module.exports = function loadPlayerManager(client) {
-  if (!client.config.nodes || !client.config.nodes.length) {
-    client.logger.log("[Lavalink] WARNING: No nodes found in config.js!", "error");
-  } else {
-    client.logger.log(`[Lavalink] Initializing with ${client.config.nodes.length} node(s)...`, "ready");
-  }
+  const botId = client.user?.id || client.config.clientId || "1399186967966519326";
+
+  // Create connector instance and enforce client id
+  const connector = new Connectors.DiscordJS(client);
+  connector.id = botId;
+
+  // Jab client ready ho jaye to ID ko update kar do
+  client.once("ready", () => {
+    if (client.user?.id) {
+      connector.id = client.user.id;
+    }
+  });
 
   const manager = new Kazagumo(
     {
@@ -45,30 +52,15 @@ module.exports = function loadPlayerManager(client) {
         }
       },
     },
-    new Connectors.DiscordJS(client),
+    connector,
     client.config.nodes,
     ShoukakuOptions
   );
 
-  // Bot ready hone ke baad pending nodes ko reconnect trigger karna
-  const initNodesOnReady = () => {
-    if (manager.shoukaku && client.config.nodes && client.config.nodes.length) {
-      for (const node of client.config.nodes) {
-        if (!manager.shoukaku.nodes.has(node.name)) {
-          try {
-            manager.shoukaku.addNode(node);
-          } catch (e) {
-            // Already initialized or connecting
-          }
-        }
-      }
-    }
-  };
-
-  if (client.isReady()) {
-    initNodesOnReady();
-  } else {
-    client.once("ready", initNodesOnReady);
+  // Shoukaku connector ki id ensure karna
+  if (manager.shoukaku && manager.shoukaku.connector) {
+    manager.shoukaku.connector.id = botId;
+    manager.shoukaku.id = botId;
   }
 
   manager.searchEngines = searchEngines;
@@ -78,7 +70,7 @@ module.exports = function loadPlayerManager(client) {
     const prefix = options.engine || this.defaultSearchEngine;
 
     const node = [...this.shoukaku.nodes.values()].find(
-      (node) => node.state === 2
+      (n) => n.state === 2
     );
 
     const selectedNode = node || [...this.shoukaku.nodes.values()][0];
